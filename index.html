@@ -1260,7 +1260,7 @@
             async changePassword(currentPassword, newPassword, confirmPassword) {
                 const session = JSON.parse(localStorage.getItem('despensa-session') || '{}');
                 const username = session.username || 'admin';
-                const mode = this.currentMode;
+                const mode = session.mode || this.currentMode;
 
                 const isValid = await this.checkCredentials(username, currentPassword, mode);
                 if (!isValid) {
@@ -1277,13 +1277,17 @@
 
                 try {
                     const key = mode === 'shared' ? 'despensa-credentials-shared' : 'despensa-credentials';
+                    const isShared = mode === 'shared';
+                    
                     await window.storage.set(key, JSON.stringify({
                         username: username,
                         password: newPassword
-                    }), mode === 'shared');
+                    }), isShared);
+                    
                     return { success: true };
                 } catch (error) {
-                    return { success: false, message: 'Error al guardar la contraseña' };
+                    console.error('Error al cambiar contraseña:', error);
+                    return { success: false, message: 'Error al guardar la contraseña: ' + error.message };
                 }
             }
         };
