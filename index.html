@@ -1123,6 +1123,12 @@
                 <h2>Cambiar Contraseña</h2>
                 <button class="close-btn" onclick="auth.closeChangePassword()">&times;</button>
             </div>
+            
+            <div id="modeIndicator" style="background: rgba(46, 204, 113, 0.1); border: 2px solid var(--secondary); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem;">
+                <strong>📍 Modo seleccionado:</strong> <span id="currentModeText">Personal</span>
+                <p style="margin-top: 0.5rem; color: var(--text-dim); font-size: 0.85rem;">La contraseña se cambiará para este modo específicamente.</p>
+            </div>
+            
             <div class="error-message" id="changePasswordError"></div>
             <form id="changePasswordForm">
                 <div class="form-group">
@@ -1249,6 +1255,14 @@
             showChangePassword() {
                 document.getElementById('changePasswordModal').classList.add('active');
                 document.getElementById('changePasswordError').classList.remove('show');
+                
+                // Actualizar el indicador del modo
+                const modeText = document.getElementById('currentModeText');
+                if (this.currentMode === 'shared') {
+                    modeText.textContent = '👨‍👩‍👧‍👦 Compartido';
+                } else {
+                    modeText.textContent = '👤 Personal';
+                }
             },
 
             closeChangePassword() {
@@ -1258,15 +1272,26 @@
             },
 
             async changePassword(currentPassword, newPassword, confirmPassword) {
+                // Obtener el modo actual del selector en la pantalla de login
+                const selectedMode = this.currentMode;
                 const session = JSON.parse(localStorage.getItem('despensa-session') || '{}');
                 const username = session.username || 'admin';
-                const mode = session.mode || this.currentMode;
+                
+                // Si hay sesión activa, usar el modo de la sesión, si no, usar el seleccionado
+                const mode = session.mode || selectedMode;
 
+                // Validar que el modo sea válido
+                if (!mode || (mode !== 'personal' && mode !== 'shared')) {
+                    return { success: false, message: 'Error: Modo no válido. Por favor selecciona Personal o Compartido.' };
+                }
+
+                // Verificar contraseña actual
                 const isValid = await this.checkCredentials(username, currentPassword, mode);
                 if (!isValid) {
                     return { success: false, message: 'La contraseña actual es incorrecta' };
                 }
 
+                // Validar nueva contraseña
                 if (newPassword.length < 4) {
                     return { success: false, message: 'La contraseña debe tener al menos 4 caracteres' };
                 }
@@ -1275,6 +1300,7 @@
                     return { success: false, message: 'Las contraseñas no coinciden' };
                 }
 
+                // Guardar nueva contraseña
                 try {
                     const key = mode === 'shared' ? 'despensa-credentials-shared' : 'despensa-credentials';
                     const isShared = mode === 'shared';
@@ -1287,7 +1313,7 @@
                     return { success: true };
                 } catch (error) {
                     console.error('Error al cambiar contraseña:', error);
-                    return { success: false, message: 'Error al guardar la contraseña: ' + error.message };
+                    return { success: false, message: 'Error al guardar: ' + (error.message || 'Error desconocido') };
                 }
             }
         };
