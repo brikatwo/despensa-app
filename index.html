@@ -2,7 +2,12 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Mi Despensa">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>Mi Despensa Personal - Compartida</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@300;400;600;700&display=swap');
@@ -31,6 +36,10 @@
             background: var(--bg);
             color: var(--text);
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            touch-action: pan-y;
+            overscroll-behavior-y: none;
         }
 
         /* Login Screen */
@@ -363,6 +372,14 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             font-size: 0.85rem;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        .btn:active {
+            transform: scale(0.97);
         }
         
         .btn-primary {
@@ -497,6 +514,12 @@
             border: 2px solid transparent;
             position: relative;
             overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+        
+        .pasillo-card:active {
+            transform: translateY(-3px);
         }
         
         .pasillo-card::before {
@@ -687,6 +710,19 @@
             transition: all 0.3s ease;
             color: var(--text);
             font-size: 1rem;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+            min-width: 40px;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .icon-btn:active {
+            transform: scale(0.95);
         }
         
         .icon-btn:hover {
@@ -783,6 +819,19 @@
             font-family: 'Work Sans', sans-serif;
             font-size: 1rem;
             transition: all 0.3s ease;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        
+        /* Prevenir zoom en iOS */
+        @media screen and (max-width: 768px) {
+            .form-group input,
+            .form-group select,
+            .form-group textarea,
+            .search-input {
+                font-size: 16px;
+            }
         }
         
         .form-group input:focus,
@@ -876,40 +925,317 @@
         }
         
         @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+                position: relative;
+            }
+
             .header-content {
                 flex-direction: column;
                 text-align: center;
+                gap: 0.75rem;
+            }
+
+            .logo {
+                font-size: 1.8rem;
+                justify-content: center;
+            }
+
+            .logo::before {
+                font-size: 1.5rem;
+            }
+
+            .mode-badge {
+                display: block;
+                margin-left: 0;
+                margin-top: 0.5rem;
+                font-size: 0.7rem;
             }
             
             .stats {
-                flex-direction: column;
+                width: 100%;
+                flex-direction: row;
+                justify-content: space-around;
                 gap: 1rem;
+                padding: 0.5rem 0;
+            }
+
+            .stat-item {
+                flex: 1;
+            }
+
+            .stat-value {
+                font-size: 1.3rem;
+            }
+
+            .stat-item span:last-child {
+                font-size: 0.75rem;
+            }
+
+            .header-actions {
+                width: 100%;
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 0.5rem;
+            }
+
+            .header-actions .btn {
+                flex: 1;
+                padding: 0.75rem 0.5rem;
+                font-size: 0.75rem;
+                white-space: nowrap;
+            }
+
+            .btn-logout {
+                flex: 0.8;
+            }
+
+            .container {
+                padding: 0 1rem;
+                margin: 1rem auto;
+            }
+
+            .nav-tabs {
+                gap: 0.5rem;
+                margin-bottom: 1rem;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                padding-bottom: 0.5rem;
+            }
+
+            .nav-tabs::-webkit-scrollbar {
+                display: none;
+            }
+
+            .nav-tab {
+                padding: 0.75rem 1.25rem;
+                font-size: 0.9rem;
+                white-space: nowrap;
+                flex-shrink: 0;
             }
             
             .products-header {
                 flex-direction: column;
                 align-items: stretch;
+                gap: 1rem;
+            }
+
+            .products-header h2 {
+                font-size: 1.5rem;
             }
             
             .search-filter {
                 justify-content: stretch;
+                flex-direction: column;
+                gap: 0.75rem;
             }
             
             .search-input {
                 min-width: auto;
+                width: 100%;
+                font-size: 1rem;
+                padding: 0.75rem;
             }
             
-            .pasillos-grid,
+            .pasillos-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .pasillo-card {
+                padding: 1.5rem;
+            }
+
+            .pasillo-icon {
+                font-size: 2.5rem;
+            }
+
+            .pasillo-name {
+                font-size: 1.3rem;
+            }
+
+            .pasillo-actions {
+                flex-direction: column;
+            }
+
+            .pasillo-actions .btn {
+                width: 100%;
+            }
+
             .products-grid {
                 grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .product-card {
+                padding: 1.25rem;
+            }
+
+            .product-header {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .product-category {
+                align-self: flex-start;
+            }
+
+            .product-actions {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr 1fr;
+                gap: 0.5rem;
+            }
+
+            .icon-btn {
+                padding: 0.75rem;
+                font-size: 1.1rem;
+                min-height: 44px; /* iOS touch target minimum */
+            }
+
+            .shopping-item {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+                padding: 1.25rem;
+            }
+
+            .item-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+
+            .item-actions .icon-btn {
+                min-width: 44px;
+                min-height: 44px;
             }
 
             .login-box {
-                padding: 2rem;
+                padding: 2rem 1.5rem;
+                max-width: 100%;
+            }
+
+            .login-logo h1 {
+                font-size: 2rem;
+            }
+
+            .login-logo-icon {
+                font-size: 3rem;
             }
 
             .mode-selector {
                 flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .mode-option {
+                padding: 1.25rem;
+            }
+
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                font-size: 16px; /* Prevents zoom on iOS */
+                padding: 0.875rem;
+            }
+
+            .btn-login {
+                padding: 1rem;
+                font-size: 0.95rem;
+                min-height: 50px;
+            }
+
+            .modal-content {
+                padding: 1.5rem;
+                width: 95%;
+                max-height: 85vh;
+            }
+
+            .modal-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .form-actions .btn {
+                width: 100%;
+                padding: 1rem;
+            }
+
+            .empty-state {
+                padding: 3rem 1rem;
+            }
+
+            .empty-state-icon {
+                font-size: 4rem;
+            }
+
+            .empty-state h3 {
+                font-size: 1.25rem;
+            }
+
+            /* Mejoras para el teclado móvil */
+            .modal.active {
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+
+            /* Asegurar que los botones sean fáciles de tocar */
+            .btn,
+            .icon-btn,
+            button {
+                min-height: 44px;
+                -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+            }
+
+            /* Mejorar scrolling en iOS */
+            .modal-content,
+            .view {
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+
+        /* Media query adicional para pantallas muy pequeñas */
+        @media (max-width: 360px) {
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .stat-value {
+                font-size: 1.1rem;
+            }
+
+            .header-actions .btn {
+                padding: 0.65rem 0.4rem;
+                font-size: 0.7rem;
+            }
+
+            .products-header h2 {
+                font-size: 1.3rem;
+            }
+
+            .product-actions {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.4rem;
+            }
+        }
+
+        /* Mejoras para iPhone con notch */
+        @supports (padding: max(0px)) {
+            .header {
+                padding-top: max(1.5rem, env(safe-area-inset-top));
+            }
+
+            .container {
+                padding-left: max(1rem, env(safe-area-inset-left));
+                padding-right: max(1rem, env(safe-area-inset-right));
+            }
+
+            .login-container {
+                padding-top: max(2rem, env(safe-area-inset-top));
+                padding-bottom: max(2rem, env(safe-area-inset-bottom));
             }
         }
     </style>
