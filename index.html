@@ -1152,7 +1152,7 @@
                 <p style="font-size: 0.85rem; color: var(--text-dim);">
                     💡 <strong>Contraseña por defecto:</strong><br>
                     Usuario: <code>admin</code><br>
-                    Contraseña: <code>1234</code>
+                    Contraseña: <code>7777</code>
                 </p>
             </div>
         </div>
@@ -1202,10 +1202,10 @@
                         const credentials = JSON.parse(credentialsResult.value);
                         return username === credentials.username && password === credentials.password;
                     } else {
-                        return username === 'admin' && password === '1234';
+                        return username === 'admin' && password === '7777';
                     }
                 } catch (error) {
-                    return username === 'admin' && password === '1234';
+                    return username === 'admin' && password === '7777';
                 }
             },
 
