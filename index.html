@@ -1522,10 +1522,10 @@
             async checkCredentials(username, password, mode) {
                 try {
                     const key = mode === 'shared' ? 'despensa-credentials-shared' : 'despensa-credentials';
-                    const credentialsResult = await window.storage.get(key, mode === 'shared');
+                    const credentialsStr = localStorage.getItem(key);
                     
-                    if (credentialsResult) {
-                        const credentials = JSON.parse(credentialsResult.value);
+                    if (credentialsStr) {
+                        const credentials = JSON.parse(credentialsStr);
                         return username === credentials.username && password === credentials.password;
                     } else {
                         return username === 'admin' && password === '7777';
@@ -1629,12 +1629,11 @@
                 // Guardar nueva contraseña
                 try {
                     const key = mode === 'shared' ? 'despensa-credentials-shared' : 'despensa-credentials';
-                    const isShared = mode === 'shared';
                     
-                    await window.storage.set(key, JSON.stringify({
+                    localStorage.setItem(key, JSON.stringify({
                         username: username,
                         password: newPassword
-                    }), isShared);
+                    }));
                     
                     return { success: true };
                 } catch (error) {
@@ -1667,20 +1666,21 @@
             async loadData() {
                 try {
                     const isShared = this.isSharedMode();
+                    const suffix = isShared ? '-shared' : '';
                     
-                    const pasillosResult = await window.storage.get('despensa-pasillos', isShared);
-                    if (pasillosResult) {
-                        this.data.pasillos = JSON.parse(pasillosResult.value);
+                    const pasillosStr = localStorage.getItem('despensa-pasillos' + suffix);
+                    if (pasillosStr) {
+                        this.data.pasillos = JSON.parse(pasillosStr);
                     }
 
-                    const productosResult = await window.storage.get('despensa-productos', isShared);
-                    if (productosResult) {
-                        this.data.productos = JSON.parse(productosResult.value);
+                    const productosStr = localStorage.getItem('despensa-productos' + suffix);
+                    if (productosStr) {
+                        this.data.productos = JSON.parse(productosStr);
                     }
 
-                    const comprasResult = await window.storage.get('despensa-compras', isShared);
-                    if (comprasResult) {
-                        this.data.listaCompras = JSON.parse(comprasResult.value);
+                    const comprasStr = localStorage.getItem('despensa-compras' + suffix);
+                    if (comprasStr) {
+                        this.data.listaCompras = JSON.parse(comprasStr);
                     }
                 } catch (error) {
                     console.log('Iniciando con datos vacíos');
@@ -1693,9 +1693,11 @@
             async saveData() {
                 try {
                     const isShared = this.isSharedMode();
-                    await window.storage.set('despensa-pasillos', JSON.stringify(this.data.pasillos), isShared);
-                    await window.storage.set('despensa-productos', JSON.stringify(this.data.productos), isShared);
-                    await window.storage.set('despensa-compras', JSON.stringify(this.data.listaCompras), isShared);
+                    const suffix = isShared ? '-shared' : '';
+                    
+                    localStorage.setItem('despensa-pasillos' + suffix, JSON.stringify(this.data.pasillos));
+                    localStorage.setItem('despensa-productos' + suffix, JSON.stringify(this.data.productos));
+                    localStorage.setItem('despensa-compras' + suffix, JSON.stringify(this.data.listaCompras));
                 } catch (error) {
                     console.error('Error guardando datos:', error);
                     alert('Error al guardar los datos. Por favor intenta de nuevo.');
