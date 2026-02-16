@@ -1658,9 +1658,12 @@
             },
 
             async init() {
+                console.log('🚀 Inicializando aplicación...');
+                console.log('Modo actual:', this.isSharedMode() ? 'Compartido' : 'Personal');
                 await this.loadData();
                 this.renderAll();
                 this.setupEventListeners();
+                console.log('✅ Aplicación inicializada');
             },
 
             async loadData() {
@@ -1668,22 +1671,33 @@
                     const isShared = this.isSharedMode();
                     const suffix = isShared ? '-shared' : '';
                     
+                    console.log('Cargando datos con suffix:', suffix);
+                    
                     const pasillosStr = localStorage.getItem('despensa-pasillos' + suffix);
                     if (pasillosStr) {
                         this.data.pasillos = JSON.parse(pasillosStr);
+                        console.log('✅ Pasillos cargados:', this.data.pasillos.length);
+                    } else {
+                        console.log('⚠️ No hay pasillos guardados');
                     }
 
                     const productosStr = localStorage.getItem('despensa-productos' + suffix);
                     if (productosStr) {
                         this.data.productos = JSON.parse(productosStr);
+                        console.log('✅ Productos cargados:', this.data.productos.length);
+                    } else {
+                        console.log('⚠️ No hay productos guardados');
                     }
 
                     const comprasStr = localStorage.getItem('despensa-compras' + suffix);
                     if (comprasStr) {
                         this.data.listaCompras = JSON.parse(comprasStr);
+                        console.log('✅ Compras cargadas:', this.data.listaCompras.length);
+                    } else {
+                        console.log('⚠️ No hay lista de compras guardada');
                     }
                 } catch (error) {
-                    console.log('Iniciando con datos vacíos');
+                    console.error('❌ Error cargando datos:', error);
                     this.data.pasillos = [];
                     this.data.productos = [];
                     this.data.listaCompras = [];
@@ -1695,11 +1709,17 @@
                     const isShared = this.isSharedMode();
                     const suffix = isShared ? '-shared' : '';
                     
+                    console.log('Guardando datos con suffix:', suffix);
+                    console.log('Pasillos a guardar:', this.data.pasillos.length);
+                    console.log('Productos a guardar:', this.data.productos.length);
+                    
                     localStorage.setItem('despensa-pasillos' + suffix, JSON.stringify(this.data.pasillos));
                     localStorage.setItem('despensa-productos' + suffix, JSON.stringify(this.data.productos));
                     localStorage.setItem('despensa-compras' + suffix, JSON.stringify(this.data.listaCompras));
+                    
+                    console.log('✅ Datos guardados en localStorage');
                 } catch (error) {
-                    console.error('Error guardando datos:', error);
+                    console.error('❌ Error guardando datos:', error);
                     alert('Error al guardar los datos. Por favor intenta de nuevo.');
                 }
             },
@@ -1926,24 +1946,39 @@
             },
 
             async savePasillo() {
+                console.log('=== INICIANDO savePasillo ===');
                 const id = document.getElementById('pasilloId').value || Date.now().toString();
+                const nombre = document.getElementById('pasilloNombre').value;
+                const icono = document.getElementById('pasilloIcono').value || '📦';
+                const descripcion = document.getElementById('pasilloDescripcion').value;
+                
+                console.log('Datos del formulario:', { id, nombre, icono, descripcion });
+                
                 const pasillo = {
                     id,
-                    nombre: document.getElementById('pasilloNombre').value,
-                    icono: document.getElementById('pasilloIcono').value || '📦',
-                    descripcion: document.getElementById('pasilloDescripcion').value
+                    nombre,
+                    icono,
+                    descripcion
                 };
 
                 if (this.editingId) {
+                    console.log('Editando pasillo existente:', this.editingId);
                     const index = this.data.pasillos.findIndex(p => p.id === this.editingId);
                     this.data.pasillos[index] = pasillo;
                 } else {
+                    console.log('Agregando nuevo pasillo');
                     this.data.pasillos.push(pasillo);
                 }
+                
+                console.log('Pasillos actuales:', this.data.pasillos);
+                console.log('Modo compartido:', this.isSharedMode());
 
                 await this.saveData();
+                console.log('Datos guardados exitosamente');
+                
                 this.closeModal('pasilloModal');
                 this.renderAll();
+                console.log('=== FIN savePasillo ===');
             },
 
             editPasillo(id) {
